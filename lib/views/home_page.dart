@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pinch_scrollable/pinch_scrollable.dart';
 import 'package:pinch_zoom/pinch_zoom.dart';
 
 import '../controller/pizza_controller.dart';
