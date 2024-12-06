@@ -14,13 +14,14 @@ class PizzaController extends GetxController {
     super.onInit();
   }
 
-  List<Recipes> recipe = <Recipes>[];
-  var isTappedImage = false.obs;
+  List recipe = <Recipes>[];
 
-  void isTapped(){
-    isTappedImage.value = !isTappedImage.value;
-    update();
-  }
+  // var isTappedImage = false.obs;
+  //
+  // void isTapped(int index){
+  //   isTappedImage.value = true;
+  //   update();
+  // }
 
   Future getRecipes() async{
     const String url = "https://forkify-api.herokuapp.com/api/search?q=pizza#";
