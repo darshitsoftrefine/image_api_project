@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,13 +15,6 @@ class PizzaController extends GetxController {
   }
 
   List recipe = <Recipes>[];
-
-  // var isTappedImage = false.obs;
-  //
-  // void isTapped(int index){
-  //   isTappedImage.value = true;
-  //   update();
-  // }
 
   Future getRecipes() async{
     const String url = "https://forkify-api.herokuapp.com/api/search?q=pizza#";
@@ -41,7 +34,7 @@ class PizzaController extends GetxController {
         update();
         return recipe;
       } catch(e){
-        print("Error call $e");
+        debugPrint("Error call $e");
         throw Exception(e.toString());
       }
     }

@@ -39,6 +39,7 @@ dependencies:
   http: ^1.2.2
   pinch_zoom: ^2.0.0
   pinch_zoom_release_unzoom: ^1.0.3
+  connectivity_plus: ^5.0.2
   cached_network_image: ^3.4.1
 
 dev_dependencies:

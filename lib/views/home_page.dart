@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:images_api_proj/models/pizza_model.dart';
 import 'package:pinch_zoom/pinch_zoom.dart';
 import 'package:pinch_zoom_release_unzoom/pinch_zoom_release_unzoom.dart';
 
@@ -17,9 +19,12 @@ class _HomePageState extends State<HomePage> {
 
   double _currentScale = 1.0;
 
-  List<TransformationController> transformationControllers = List.generate(50, (_) => TransformationController()); //Pass dynamic length
-  List<bool> isTapped = List.generate(50, (_) => false);  //Pass dynamic length
-  
+  List<TransformationController> transformationControllers = List.generate(30, (_) => TransformationController());
+  List<bool> isTapped = List.generate(30, (_) => false);
+
+  bool hasInternet = false;
+  List<Recipes> recipes = [];
+
   bool blockScroll = false;
   ScrollController scrollController = ScrollController();
 
@@ -37,6 +42,19 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future checkInternetConnection() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile) {
+      hasInternet = true;
+      return hasInternet;
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      hasInternet = true;
+      return hasInternet;
+    }
+    hasInternet = false;
+    return hasInternet;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,15 +65,21 @@ class _HomePageState extends State<HomePage> {
         body: GetBuilder<PizzaController>(
           init: PizzaController(),
           builder: (PizzaController controller) {
-            return Padding(
+            checkInternetConnection().then((value) {
+              if(value){
+                hasInternet = value;
+              } else {
+                hasInternet = false;
+              }
+            });
+            return !hasInternet ? const Center(child: CircularProgressIndicator()) : Padding(
               padding: const EdgeInsets.all(8.0),
               child: ListView.builder(
                 controller: scrollController,
                 physics: blockScroll ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
                     itemCount: controller.recipe.length,
                     itemBuilder: (BuildContext context, int index) {
-                      //var getData = controller.recipe.elementAt(index);
-                      
+                      var getData = controller.recipe[index];
 
                       return Padding(
                         padding: const EdgeInsets.all(20.0),
@@ -67,8 +91,6 @@ class _HomePageState extends State<HomePage> {
                               height: 350,
                               child: Card(
                                 child: InteractiveViewer(
-                                  panEnabled: true,
-                                  scaleEnabled: true,
                                   transformationController: transformationControllers[index],
                                   maxScale: 3.0,
                                   child: PinchZoomReleaseUnzoomWidget(
@@ -79,7 +101,7 @@ class _HomePageState extends State<HomePage> {
                                       PinchZoomReleaseUnzoomWidget.defaultResetDuration, () => setState(() => blockScroll = false),
                                     ),
                                     child: PinchZoom(
-                                      child: CachedNetworkImage(imageUrl: controller.recipe[index].imageUrl,
+                                      child: CachedNetworkImage(imageUrl: getData.imageUrl,
                                         fit: BoxFit.cover,
                                         progressIndicatorBuilder: (context, url, downloadProgress) => Center(child: CircularProgressIndicator(value: downloadProgress.progress)),
                                         errorWidget: (context, url, error) => const Icon(Icons.error),),
@@ -112,7 +134,9 @@ class _HomePageState extends State<HomePage> {
                                               backgroundColor: Colors.transparent,
                                               minimumSize: const Size(10, 20)
                                             ),
-                                            icon: const Icon(Icons.add, size: 35, color: Colors.white,),),
+                                            icon: const Icon(Icons.add, size: 35, color: Colors.white,),
+                                            iconAlignment: IconAlignment.end,
+                                          ),
                                         ),
                                       ),
                                       Tooltip(
@@ -125,10 +149,12 @@ class _HomePageState extends State<HomePage> {
                                               backgroundColor: Colors.transparent,
                                               minimumSize: const Size(10, 20)
                                           ),
-                                          icon: const Icon(Icons.remove, size: 35, color: Colors.white,),),
+                                          icon: const Icon(Icons.remove, size: 35, color: Colors.white,),
+                                          iconAlignment: IconAlignment.end,
+                                        ),
                                       ),
                                     ],
-                                  ) :  Container(
+                                  ) : Container(
                                     color: Colors.transparent,
                                     child: const Icon(
                                       Icons.zoom_in,
