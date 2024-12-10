@@ -1,11 +1,12 @@
 class Recipes {
-  late String title;
-  late String imageUrl;
+  final String title;
+  final String imageUrl;
 
-  Recipes(this.imageUrl, this.title);
+  Recipes({required this.imageUrl, required this.title});
 
-  Recipes.fromJson(Map<String, dynamic> json) {
-    imageUrl = json['image_url'];
-    title = json['title'];
+  factory Recipes.fromJson(Map<String, dynamic> json) {
+    return Recipes(
+        imageUrl: json['image_url'],
+        title: json['title']);
   }
 }
