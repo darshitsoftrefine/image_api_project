@@ -17,35 +17,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  double _currentScale = 1.0;
-
-  PizzaController pizzaController = Get.put(PizzaController());
-  List<TransformationController> transformationControllers = List.generate(30, (_) => TransformationController());
-  //List<bool> isTapped = List.generate(30, (_) => false);
-
   bool isTapped = false;
-
-  TransformationController controller = TransformationController();
   bool hasInternet = false;
   List<Recipes> recipes = [];
 
   bool blockScroll = false;
   ScrollController scrollController = ScrollController();
-
-  void _zoomIn() {
-    setState(() {
-      _currentScale += 0.1;
-      controller.value = Matrix4.identity()..scale(_currentScale);
-      print(controller.value);
-    });
-  }
-
-  void _zoomOut() {
-    setState(() {
-      // _currentScale -= 0.1;
-      // transformationControllers[index].value = Matrix4.identity()..scale(_currentScale);
-    });
-  }
 
   Future checkInternetConnection() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
